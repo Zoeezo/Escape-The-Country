@@ -1,7 +1,7 @@
 # Escape the country
 ![](https://img.shields.io/github/license/Zoeezo/Escape-The-Country?color=pink) ![](https://img.shields.io/github/languages/top/Zoeezo/Escape-The-Country?color=pink) ![](https://img.shields.io/github/issues-raw/Zoeezo/Escape-The-Country?color=pink) ![](https://img.shields.io/github/last-commit/Zoeezo/Escape-The-Country?color=pink)
-'Escape the country' is a text-based story game written in Python. You are playing as a person living in a country torn apart by a civil war. 
 
+'Escape the country' is a text-based story game written in Python. You are playing as a person living in a country torn apart by a civil war. 
 
 You have to manage items, money and a little bit of luck to survive and make it to a safer country, you'll meet lots of people but not everyone is as they appear.
 
