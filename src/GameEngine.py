@@ -1,4 +1,5 @@
 from time import sleep
+from Exceptions import HpZeroError
 import os
 
 class TextColors():
@@ -23,7 +24,7 @@ class Console():
         else:
             self.DefaultTextColor = TextColors.white
         
-        self.clearScreen()
+        self.clearScreen(prompt=False)
 
     def write(self, text, color = None, emptyString = True):
         if(not TextColors.isValidColor(TextColors, color)):
@@ -51,7 +52,7 @@ class Console():
         alphabet = ['A', 'B', 'C', 'D', 'E', 'F']
 
         if(not TextColors.isValidColor(TextColors, textColor)):
-            color = self.DefaultTextColor
+            TextColor = self.DefaultTextColor
 
         self.write(question, color=textColor)
 
@@ -105,7 +106,15 @@ class Player():
     def setHP(self, hp):
         self.hp = hp
 
-        return self.hp
+    def addHP(self, hp):
+        self.hp += hp
+
+    def removeHP(self, hp):
+        newHP = self.hp - hp
+        if(newHP <= 0 ):
+            raise HpZeroError()
+        else:
+            self.hp = newHP
 
     def getHP(self):
         return self.hp
@@ -127,4 +136,27 @@ class Player():
 
     def getMoney(self):
         return self.money
+
+    def hasItem(self, item):
+        if item in self.inventory:
+            return True
+        else:
+            return False
+
+    def addItem(self, item):
+        self.inventory.append(item)
+    
+    def addItems(self, items):
+        for item in items:
+            self.inventory.append(item)
+
+    def removeItem(self, item, count = 1):
+        x = 0
+        while(x < count):
+            self.inventory.pop(item)
+            x += 1
+
+    def removeItems(self, items):
+        for item in items:
+            self.inventory.pop(item)
     
