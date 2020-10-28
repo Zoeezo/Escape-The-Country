@@ -1,33 +1,68 @@
 from time import sleep
-from Exceptions import HpZeroError
+from Exceptions import HpZeroError, moneyZeroError, itemNonExistantError
 import os
 
 class TextColors():
-    white = '\033[37m'
-    red = '\033[31m'
-    blue = '\033[34m'
-    green = '\033[32m'
-    yellow = '\033[36m'
+    '''Class that contains default colours.
+    
+    Attributes:
+        WHITE (str): String that contains the ANSI escape sequence for white text.
+        RED (str): String that contains the ANSI escape sequence for red text.
+        BLUE (str): String that contains the ANSI escape sequence for blue text.
+        GREEN (str): String that contains the ANSI escape sequence for green text.
+        YELLOW (str): String that contains the ANSI escape sequence for yellow text.
+        ENDLINE (str): String that contains the ANSI escape sequence that has to be at the end of the string.
+        '''
 
-    endLine = '\033[0m'
+    WHITE = '\033[37m'
+    RED = '\033[31m'
+    BLUE = '\033[34m'
+    GREEN = '\033[32m'
+    YELLOW = '\033[36m'
 
-    def isValidColor(self, color):
-        if(color == self.white or color == self.red or color == self.blue or color == self.green or color == self.yellow):
+    ENDLINE = '\033[0m'
+
+    @staticmethod
+    def isValidColor(color):
+        '''Static function to check if a color is a valid color the engine can use.
+        
+        Parameters:
+            color (str): String that contains the ANSI escape sequence for color.
+            
+        Returns:
+            bool: Boolean that returns True if color contains a valid color.'''
+
+        if(color == TextColors.WHITE or color == TextColors.RED or color == TextColors.BLUE or color == TextColors.GREEN or color == TextColors.YELLOW):
             return True
         else:
             return False
 
 class Console():
-    def __init__(self, defaultTextColor = TextColors.white):
-        if(TextColors.isValidColor(TextColors, defaultTextColor)):
+    '''Class that contains all the functions for the console.
+    
+    Arguments:
+        defaultTextColor (str): the ANSI escape sequence that should be used as a default color.
+
+    Attributes:
+        defaultTextColor (str): This is where we store the ANSI escape sequence.
+    '''
+
+    def __init__(self, defaultTextColor = TextColors.WHITE):
+        if(TextColors.isValidColor(defaultTextColor)):
             self.DefaultTextColor = defaultTextColor
         else:
-            self.DefaultTextColor = TextColors.white
+            self.DefaultTextColor = TextColors.WHITE
         
         self.clearScreen(prompt=False)
 
     def write(self, text, color = None, emptyString = True):
-        if(not TextColors.isValidColor(TextColors, color)):
+        '''Function that writes text to the console with a type effect.
+        
+        Arguments:
+            text (str): String that you wants to write to the console.
+            color (str): ANSI escape sequence for the textcolor.
+            emptyString (bool): Boolen to see if'''
+        if(not TextColors.isValidColor(color)):
             color = self.DefaultTextColor
 
         string = ""
@@ -39,20 +74,24 @@ class Console():
 
             # If it's the last char in the string
             if (length - 1 == index):
-                print(color + string + TextColors.endLine)
+                print(color + string + TextColors.ENDLINE)
 
                 if(emptyString):
                     print()
             else:
-                print(color + string + TextColors.endLine, end="\r", flush=True)
+                print(color + string + TextColors.ENDLINE, end="\r", flush=True)
                 index += 1
                 sleep(0.1)
 
-    def ask(self, question, answers = None, openQuestion = False, textColor = None):
+    def ask(self, question, answers = [], textColor = None):
         alphabet = ['A', 'B', 'C', 'D', 'E', 'F']
+        openQuestion = False
 
-        if(not TextColors.isValidColor(TextColors, textColor)):
-            TextColor = self.DefaultTextColor
+        if(len(answers) == 0):
+            openQuestion = True
+
+        if(not TextColors.isValidColor(textColor) or textColor == None):
+            textColor = self.DefaultTextColor
 
         self.write(question, color=textColor)
 
@@ -61,23 +100,23 @@ class Console():
 
             for answer in answers:
                 if (i + 1 == len(answers)):
-                    self.write(alphabet[i].upper() + ' - ' + answer, color=textColor, emptyString=True)
+                    self.write(alphabet[i].upper() + ' - ' + str(answer), color=textColor, emptyString=True)
                 else:    
-                    self.write(alphabet[i].upper() + ' - ' + answer, color=textColor, emptyString=False)
+                    self.write(alphabet[i].upper() + ' - ' + str(answer), color=textColor, emptyString=False)
                     i += 1
 
         while True:
             userInput = input(textColor + 'Input: ').lower()
-            print(TextColors.endLine)
+            print(TextColors.ENDLINE)
 
             if(not openQuestion):
                 x = 0
-                while(x < len(answers)):
-                    if(userInput == alphabet[x].lower()):
+                while(x < len(answers)):    
+                    if(userInput == alphabet[x].lower() or userInput == str(answers[x]).lower()):
                         return answers[x]
                     x += 1
 
-                self.write('Dat is geen geldige input, probeer het opnieuw!', color=TextColors.red)
+                self.write('Dat is geen geldige input, probeer het opnieuw!', color=TextColors.RED)
             else:
                 return userInput
 
@@ -122,17 +161,15 @@ class Player():
     def setMoney(self, money):
         self.money = money
 
-        return self.money
-
     def addMoney(self, money):
         self.money += money
 
-        return self.money
-
     def removeMoney(self, money):
-        self.money -= money
-
-        return self.money
+        newMoney = self.money - money
+        if(newMoney < 0):
+            raise moneyZeroError()
+        else:
+            self.money -= money
 
     def getMoney(self):
         return self.money
@@ -143,8 +180,11 @@ class Player():
         else:
             return False
 
-    def addItem(self, item):
-        self.inventory.append(item)
+    def addItem(self, item, count = 1):
+        x = 0
+        while(x < count):
+            self.inventory.append(item)
+            x += 1
     
     def addItems(self, items):
         for item in items:
@@ -153,10 +193,15 @@ class Player():
     def removeItem(self, item, count = 1):
         x = 0
         while(x < count):
-            self.inventory.pop(item)
+            try:
+                self.inventory.pop(item)
+            except:
+                raise itemNonExistantError()
             x += 1
 
     def removeItems(self, items):
         for item in items:
-            self.inventory.pop(item)
-    
+            try:
+                self.inventory.pop(item)
+            except:
+                raise itemNonExistantError()
