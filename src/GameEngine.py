@@ -1,5 +1,5 @@
 from time import sleep
-from Exceptions import HpZeroError, moneyZeroError, itemNonExistantError
+from Exceptions import moneyZeroError, itemNonExistantError
 import os
 
 class TextColors():
@@ -52,7 +52,7 @@ class Console():
             self.DefaultTextColor = defaultTextColor
         else:
             self.DefaultTextColor = TextColors.WHITE
-        
+
         self.clearScreen(prompt=False)
 
     def write(self, text, color = None, emptyString = True):
@@ -81,32 +81,32 @@ class Console():
             else:
                 print(color + string + TextColors.ENDLINE, end="\r", flush=True)
                 index += 1
-                sleep(0.1)
+                sleep(0.05)
 
-    def ask(self, question, answers = [], textColor = None):
+    def ask(self, question, answers = [], color = None):
         alphabet = ['A', 'B', 'C', 'D', 'E', 'F']
         openQuestion = False
 
         if(len(answers) == 0):
             openQuestion = True
 
-        if(not TextColors.isValidColor(textColor) or textColor == None):
-            textColor = self.DefaultTextColor
+        if(not TextColors.isValidColor(color) or color == None):
+            color = self.DefaultTextColor
 
-        self.write(question, color=textColor)
+        self.write(question, color=color)
 
         if(not openQuestion):
             i = 0
 
             for answer in answers:
                 if (i + 1 == len(answers)):
-                    self.write(alphabet[i].upper() + ' - ' + str(answer), color=textColor, emptyString=True)
+                    self.write(alphabet[i].upper() + ' - ' + str(answer), color=color, emptyString=True)
                 else:    
-                    self.write(alphabet[i].upper() + ' - ' + str(answer), color=textColor, emptyString=False)
+                    self.write(alphabet[i].upper() + ' - ' + str(answer), color=color, emptyString=False)
                     i += 1
 
         while True:
-            userInput = input(textColor + 'Input: ').lower()
+            userInput = input(color  + 'Input: ').lower()
             print(TextColors.ENDLINE)
 
             if(not openQuestion):
@@ -116,13 +116,16 @@ class Console():
                         return answers[x]
                     x += 1
 
+                if(userInput == 'exit'):
+                    return 'exit'
+                
                 self.write('Dat is geen geldige input, probeer het opnieuw!', color=TextColors.RED)
             else:
                 return userInput
 
-    def clearScreen(self, prompt=True):
+    def clearScreen(self, prompt=True, promptText='Druk op Enter om door te gaan!'):
         if(prompt):
-            self.write('Druk op Enter om door te gaan!')
+            self.write(promptText)
             input()
 
         if os.name == 'nt': # Windows
@@ -141,22 +144,6 @@ class Player():
     
     def getName(self):
         return self.name
-
-    def setHP(self, hp):
-        self.hp = hp
-
-    def addHP(self, hp):
-        self.hp += hp
-
-    def removeHP(self, hp):
-        newHP = self.hp - hp
-        if(newHP <= 0 ):
-            raise HpZeroError()
-        else:
-            self.hp = newHP
-
-    def getHP(self):
-        return self.hp
 
     def setMoney(self, money):
         self.money = money
@@ -194,7 +181,7 @@ class Player():
         x = 0
         while(x < count):
             try:
-                self.inventory.pop(item)
+                self.inventory.remove(item)
             except:
                 raise itemNonExistantError()
             x += 1
@@ -202,6 +189,6 @@ class Player():
     def removeItems(self, items):
         for item in items:
             try:
-                self.inventory.pop(item)
+                self.inventory.remove(item)
             except:
                 raise itemNonExistantError()

@@ -1,10 +1,3 @@
-class HpZeroError(Exception):
-    '''Raised when HP goes to zero'''
-
-    def __init__(self, message='HP is 0 or lower!'):
-        self.message = message
-        super().__init__(self.message)
-
 class moneyZeroError(Exception):
     '''Raised when money goes below zero'''
 
