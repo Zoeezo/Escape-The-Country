@@ -33,7 +33,7 @@ My assignment was to make a text-based application in python about a refugee fle
 
 ### Timeline
 I started by writing the [game engine](https://github.com/Zoeezo/Escape-The-Country/blob/main/src/GameEngine.py).
-After that I made a XML flowchart for the story, which you can see [here](https://lucid.app/lucidchart/9af55a6b-2b59-460f-bf2f-c710f711f793/view#?folder_id=home&browser=icon).
+After that I made a XML flowchart for the story, which you can see [here](https://github.com/Zoeezo/Escape-The-Country/tree/main/Flowcharts).
 Then I translated the XML flowchart into [python code](https://github.com/Zoeezo/Escape-The-Country/blob/main/src/Game.py).
 *And of course then the bug fixing starts!*
 
