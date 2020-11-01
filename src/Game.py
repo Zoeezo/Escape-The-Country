@@ -29,7 +29,7 @@ def deToekomst():
             console.clearScreen(prompt=False)
             titleScreen()
         else:
-            console.write('Bedankt voor het spelen van Escape The Country, ' + player.getName() + '! <3')
+            console.write('Bedankt voor het spelen van Escape The Country! <3')
             console.clearScreen(prompt=True)
             titleScreen()
 
@@ -78,7 +78,7 @@ def inNederland1():
         if(randint(0, 10) == 5):
             console.write('\'Stop, politie!\'', color=TextColors.BLUE)
             console.write('je plan mislukt en je wordt aangehouden door de politie...', color=TextColors.RED)
-            
+
             console.clearScreen(prompt=True)
             titleScreen()
         else:
@@ -98,10 +98,10 @@ def inNederland():
         days = 7
 
     console.write('Je bent eindelijk in Nederland aangekomen!')
-    
+
     while(days > 0):
         console.write('Je moet nog ' + str(days) + ' dagen doorkomen...')
-    
+
         events = [inNederland1, inNederland2]
 
         choice(events)()
@@ -183,7 +183,7 @@ def reisEvent3():
     answers = ['Ja', 'Nee']
     if(not player.hasItem('Zaklantaarn')):
         answers.remove('Ja')
-    
+
     userInput = console.ask(question='Zal ik doorlopen?', answers=answers, color=TextColors.GREEN)
 
     if(userInput == 'Ja'):
@@ -222,7 +222,7 @@ def reisEvent2():
             console.write('Na uren je duim omhoog houden ben je het zat en geef je op...', emptyString=False)
     elif(userInput == 'exit'):
         console.clearScreen(prompt=False)
-        titleScreen()   
+        titleScreen()
 
     console.write('Je loopt door en komt 10 kilometer verder...')
     return 10
@@ -263,12 +263,12 @@ def reisEvent1():
                         console.write('Daar heb ik niet genoeg geld voor...', color=TextColors.GREEN)
                 else:
                     break
-                
+
             else:
                 console.write('\'Laat maar...\'', color=TextColors.GREEN)
                 console.write('\'Oke, fijne dag!.\'', color=TextColors.BLUE)
-    
-        
+
+
         console.write('Je loopt na het winkelen nog 5 kilometer...')
         return 5
 
@@ -291,10 +291,10 @@ def deReis():
         distance = 200
     else:
         distance = 300
-    
+
     while(distance > 0):
         console.write('Je moet nog ' + str(distance) + ' kilometers lopen...')
-    
+
         events = [reisEvent1, reisEvent2, reisEvent3, reisEvent4, reisEvent5]
 
         returnedValue = choice(events)()
@@ -308,13 +308,12 @@ def deReis():
 def startStory():
     console.write('\'Hey! Je bent eindelijk wakker! Er zijn bommen ontploft hier,', color=TextColors.BLUE, emptyString=False)
     console.write('het is een wonder dat je nog leeft!\'', color=TextColors.BLUE)
-    userInput = console.ask(question='\'Hoe heet je?\'', color=TextColors.BLUE)
+    userInput = console.ask(question='\'Gaat het goed met je?\'', answers=['Ja', 'Nee'], color=TextColors.BLUE)
 
     if(userInput == 'exit'):
         console.clearScreen(prompt=False)
         titleScreen()
-        
-    player.setName(userInput)
+
 
     console.write('Wow wat is er met mijn huis gebeurd?.. Het is helemaal ingestort... Wat moet ik nu?', color=TextColors.GREEN, emptyString=False)
     userInput = console.ask(question='Zal ik zoeken naar spullen?', answers=['Ja', 'Nee'], color=TextColors.GREEN)
@@ -338,15 +337,15 @@ def startStory():
 def settings():
     global difficulty
     console.write('//Settings//')
-    userInput = console.ask(question='Moeilijkheidsgraad:', answers=['Makkelijk', 'Middelmatig', 'Moeilijk'])
+    userInput = console.ask(question='Moeilijkheidsgraad:', answers=['Makkelijk', 'Middelmatig', 'Moeilijk'], addExit=False)
 
     difficulty = userInput
-    
+
     console.clearScreen()
     menuScreen()
 
 def menuScreen():
-    userInput = console.ask(question='//Menu//', answers=['Instellingen', 'Begin', 'Exit'])
+    userInput = console.ask(question='//Menu//', answers=['Instellingen', 'Begin', 'Exit'], addExit=False)
     console.clearScreen(prompt=False)
 
     if(userInput == 'Instellingen'):
@@ -358,16 +357,16 @@ def menuScreen():
         startStory()
 
 def titleScreen():
-    print(''' 
-_______   ________  ________  ________  ________  _______      
-|\  ___ \ |\   ____\|\   ____\|\   __  \|\   __  \|\  ___ \     
-\ \   __/|\ \  \___|\ \  \___|\ \  \|\  \ \  \|\  \ \   __/|    
- \ \  \_|/_\ \_____  \ \  \    \ \   __  \ \   ____\ \  \_|/__  
-  \ \  \_|\ \|____|\  \ \  \____\ \  \ \  \ \  \___|\ \  \_|\ \ 
+    print('''
+_______   ________  ________  ________  ________  _______
+|\  ___ \ |\   ____\|\   ____\|\   __  \|\   __  \|\  ___ \
+\ \   __/|\ \  \___|\ \  \___|\ \  \|\  \ \  \|\  \ \   __/|
+ \ \  \_|/_\ \_____  \ \  \    \ \   __  \ \   ____\ \  \_|/__
+  \ \  \_|\ \|____|\  \ \  \____\ \  \ \  \ \  \___|\ \  \_|\ \
    \ \_______\____\_\  \ \_______\ \__\ \__\ \__\    \ \_______\\
     \|_______|\_________\|_______|\|__|\|__|\|__|     \|_______|
-             \|_________|                                       
-                                                                
+             \|_________|
+
                                                                 ''')
 
     console.clearScreen(prompt=True, promptText='  Druk op enter om te beginnen!')

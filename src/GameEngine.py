@@ -1,10 +1,12 @@
 from time import sleep
 from Exceptions import moneyZeroError, itemNonExistantError
 import os
+import keyboard
+import sys
 
 class TextColors():
     '''Class that contains default colours.
-    
+
     Attributes:
         WHITE (str): String that contains the ANSI escape sequence for white text.
         RED (str): String that contains the ANSI escape sequence for red text.
@@ -25,10 +27,10 @@ class TextColors():
     @staticmethod
     def isValidColor(color):
         '''Static function to check if a color is a valid color the engine can use.
-        
+
         Parameters:
             color (str): String that contains the ANSI escape sequence for color.
-            
+
         Returns:
             bool: Boolean that returns True if color contains a valid color.'''
 
@@ -39,7 +41,7 @@ class TextColors():
 
 class Console():
     '''Class that contains all the functions for the console.
-    
+
     Arguments:
         defaultTextColor (str): the ANSI escape sequence that should be used as a default color.
 
@@ -57,7 +59,7 @@ class Console():
 
     def write(self, text, color = None, emptyString = True):
         '''Function that writes text to the console with a type effect.
-        
+
         Arguments:
             text (str): String that you wants to write to the console.
             color (str): ANSI escape sequence for the textcolor.
@@ -83,50 +85,65 @@ class Console():
                 index += 1
                 sleep(0.05)
 
-    def ask(self, question, answers = [], color = None):
-        alphabet = ['A', 'B', 'C', 'D', 'E', 'F']
-        openQuestion = False
-
-        if(len(answers) == 0):
-            openQuestion = True
+    def ask(self, question, answers, color= None, addExit=True):
 
         if(not TextColors.isValidColor(color) or color == None):
             color = self.DefaultTextColor
 
         self.write(question, color=color)
 
-        if(not openQuestion):
-            i = 0
+        if(addExit):
+            answers.append('exit')
 
-            for answer in answers:
-                if (i + 1 == len(answers)):
-                    self.write(alphabet[i].upper() + ' - ' + str(answer), color=color, emptyString=True)
-                else:    
-                    self.write(alphabet[i].upper() + ' - ' + str(answer), color=color, emptyString=False)
-                    i += 1
+        selected = 0
+
+        def showOptions(answers, selected, clear=False):
+            if (clear):
+                for i in range(len(answers)):
+                    sys.stdout.write("\033[F")
+
+            for i in range(len(answers)):
+                print(color + '{1} {0} {2}'.format(answers[i], ">" if selected == i else " ", "<" if selected == i else " ") + TextColors.ENDLINE)
+
+        def up(selected, answers):
+            if (selected == 0):
+                selected = len(answers) - 1
+            else:
+                selected -= 1
+
+            return selected
+
+        def down(selected, answers):
+            if (selected == len(answers) - 1):
+                selected = 0
+            else:
+                selected += 1
+
+            return selected
+
+        showOptions(answers, selected)
 
         while True:
-            userInput = input(color  + 'Input: ').lower()
-            print(TextColors.ENDLINE)
+            if(keyboard.is_pressed('down')):
+                selected = down(selected, answers)
+                showOptions(answers, selected, clear=True)
+            elif(keyboard.is_pressed('up')):
+                selected = up(selected, answers)
+                showOptions(answers, selected, clear=True)
+            elif(keyboard.is_pressed('enter')):
+                break
 
-            if(not openQuestion):
-                x = 0
-                while(x < len(answers)):    
-                    if(userInput == alphabet[x].lower() or userInput == str(answers[x]).lower()):
-                        return answers[x]
-                    x += 1
+            sleep(0.15)
 
-                if(userInput == 'exit'):
-                    return 'exit'
-                
-                self.write('Dat is geen geldige input, probeer het opnieuw!', color=TextColors.RED)
-            else:
-                return userInput
+        print()
+        return answers[selected]
 
     def clearScreen(self, prompt=True, promptText='Druk op Enter om door te gaan!'):
         if(prompt):
             self.write(promptText)
-            input()
+            while True:
+                if(keyboard.is_pressed('enter')):
+                    break
 
         if os.name == 'nt': # Windows
             _ = os.system('cls')
@@ -141,7 +158,7 @@ class Player():
 
     def setName(self, name):
         self.name = name
-    
+
     def getName(self):
         return self.name
 
@@ -172,7 +189,7 @@ class Player():
         while(x < count):
             self.inventory.append(item)
             x += 1
-    
+
     def addItems(self, items):
         for item in items:
             self.inventory.append(item)
