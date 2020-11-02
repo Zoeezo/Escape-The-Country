@@ -1,8 +1,13 @@
-from time import sleep
 from Exceptions import moneyZeroError, itemNonExistantError
-import os
+from ctypes import wintypes
+from time import sleep
+import subprocess
 import keyboard
+import ctypes
+import msvcrt
 import sys
+import os
+
 
 class TextColors():
     '''Class that contains default colours.
@@ -57,6 +62,39 @@ class Console():
 
         self.clearScreen(prompt=False)
 
+        kernel32 = ctypes.WinDLL('kernel32', use_last_error=True)
+        user32 = ctypes.WinDLL('user32', use_last_error=True)
+
+        SW_MAXIMIZE = 3
+
+        kernel32.GetConsoleWindow.restype = wintypes.HWND
+        kernel32.GetLargestConsoleWindowSize.restype = wintypes._COORD
+        kernel32.GetLargestConsoleWindowSize.argtypes = (wintypes.HANDLE,)
+        user32.ShowWindow.argtypes = (wintypes.HWND, ctypes.c_int)
+
+        fd = os.open('CONOUT$', os.O_RDWR)
+
+        try:
+            hCon = msvcrt.get_osfhandle(fd)
+            max_size = kernel32.GetLargestConsoleWindowSize(hCon)
+            if max_size.X == 0 and max_size.Y == 0:
+                raise ctypes.WinError(ctypes.get_last_error())
+
+        finally:
+            os.close(fd)
+
+        cols = max_size.X
+        hWnd = kernel32.GetConsoleWindow()
+
+        if cols and hWnd:
+            lines = max_size.Y
+            subprocess.check_call('mode.com con cols={} lines={}'.format(
+                                    cols, lines))
+            user32.ShowWindow(hWnd, SW_MAXIMIZE)
+
+        self.width = cols - 50
+        self.height = lines
+
     def write(self, text, color = None, emptyString = True):
         '''Function that writes text to the console with a type effect.
 
@@ -67,7 +105,9 @@ class Console():
         if(not TextColors.isValidColor(color)):
             color = self.DefaultTextColor
 
-        string = ""
+        margin = int((int(len(text.center(self.width))) - int(len(text))) / 2)
+
+        string = ' ' * int(margin)
         length = len(text)
         index = 0
 
@@ -84,6 +124,19 @@ class Console():
                 print(color + string + TextColors.ENDLINE, end="\r", flush=True)
                 index += 1
                 sleep(0.05)
+
+    def printText(self, text, color=None, emptyString = True):
+        if(not TextColors.isValidColor(color)):
+            color = self.DefaultTextColor
+
+        margin = int((int(len(text.center(self.width))) - int(len(text))) / 2)
+
+        string = (' ' * int(margin) + color + text + TextColors.ENDLINE)
+
+        print(string)
+
+        if(emptyString):
+            print()
 
     def ask(self, question, answers, color= None, addExit=True):
 
@@ -103,7 +156,7 @@ class Console():
                     sys.stdout.write("\033[F")
 
             for i in range(len(answers)):
-                print(color + '{1} {0} {2}'.format(answers[i], ">" if selected == i else " ", "<" if selected == i else " ") + TextColors.ENDLINE)
+                print(color + '{1} {0} {2}'.center(self.width).format(answers[i], ">" if selected == i else " ", "<" if selected == i else " ") + TextColors.ENDLINE)
 
         def up(selected, answers):
             if (selected == 0):
@@ -149,6 +202,13 @@ class Console():
             _ = os.system('cls')
         else: # Mac/Linux
             _ = os.system('clear')
+
+    def getScreenWidth(self):
+        return self.width
+
+    def getScreenHeight(self):
+        return self.height
+
 
 class Player():
     def __init__(self, hp = 100, money = 10.0, inventory = []):

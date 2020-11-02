@@ -357,18 +357,16 @@ def menuScreen():
         startStory()
 
 def titleScreen():
-    print('''
-_______   ________  ________  ________  ________  _______
-|\  ___ \ |\   ____\|\   ____\|\   __  \|\   __  \|\  ___ \\
-\ \   __/|\ \  \___|\ \  \___|\ \  \|\  \ \  \|\  \ \   __/|
- \ \  \_|/_\ \_____  \ \  \    \ \   __  \ \   ____\ \  \_|/__
-  \ \  \_|\ \|____|\  \ \  \____\ \  \ \  \ \  \___|\ \  \_|\ \\
-   \ \_______\____\_\  \ \_______\ \__\ \__\ \__\    \ \_______\\
-    \|_______|\_________\|_______|\|__|\|__|\|__|     \|_______|
-             \|_________|
 
-                                                                ''')
-                                                                
+    console.printText(' _______   ________  ________  ________  ________  _______', emptyString=False)
+    console.printText('|\  ___ \ |\   ____\|\   ____\|\   __  \|\   __  \|\  ___ \\', emptyString=False)
+    console.printText('\ \   __/|\ \  \___|\ \  \___|\ \  \|\  \ \  \|\  \ \   __/|', emptyString=False)
+    console.printText(' \ \  \_|/_\ \_____  \ \  \    \ \   __  \ \   ____\ \  \_|/__', emptyString=False)
+    console.printText('  \ \  \_|\ \|____|\  \ \  \____\ \  \ \  \ \  \___|\ \  \_|\ \\', emptyString=False)
+    console.printText('   \ \_______\____\_\  \ \_______\ \__\ \__\ \__\    \ \_______\\', emptyString=False)
+    console.printText('    \|_______|\_________\|_______|\|__|\|__|\|__|     \|_______|', emptyString=False)
+    console.printText('             \|_________|')
+
     console.clearScreen(prompt=True, promptText='  Druk op enter om te beginnen!')
     menuScreen()
 
