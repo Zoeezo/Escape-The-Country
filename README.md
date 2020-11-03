@@ -15,6 +15,8 @@ You also need the 'Keyboard' library.
  $ pip install keyboard --user
  ```
 
+<p align="center">!! The windows and MacOS versions don't work, please use the developer version !!</p>
+
 ### Windows
 1. Download [EscapeTheCountry-Vx.x.zip](https://github.com/Zoeezo/Escape-The-Country/releases)
 2. Unzip it in a folder of your choice
@@ -29,6 +31,7 @@ You also need the 'Keyboard' library.
 If you want to test around with the source code you'll have to clone this repository
 ```
 $ git clone https://github.com/Zoeezo/Escape-The-Country
+$ pip install keyboard
 $ cd Escape-The-Country
 ```
 ## About
