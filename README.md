@@ -8,7 +8,12 @@ You have to manage items, money and a little bit of luck to survive and make it 
 ## Installation
 
 ### Prerequisites
-To run the game you'll need to have [python 3.9+](https://www.python.org/)
+To run the game you'll need to have [python 3.9+](https://www.python.org/).
+
+You also need the 'Keyboard' library.
+ ```
+ $ pip install keyboard --user
+ ```
 
 ### Windows
 1. Download [EscapeTheCountry-Vx.x.zip](https://github.com/Zoeezo/Escape-The-Country/releases)
