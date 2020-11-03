@@ -92,7 +92,7 @@ class Console():
                                     cols, lines))
             user32.ShowWindow(hWnd, SW_MAXIMIZE)
 
-        self.width = cols - 50
+        self.width = cols
         self.height = lines
 
     def write(self, text, color = None, emptyString = True):
@@ -156,7 +156,10 @@ class Console():
                     sys.stdout.write("\033[F")
 
             for i in range(len(answers)):
-                print(color + '{1} {0} {2}'.center(self.width).format(answers[i], ">" if selected == i else " ", "<" if selected == i else " ") + TextColors.ENDLINE)
+
+                margin = int((int(len(answers[i].center(self.width))) - int(len(answers[i]))) / 2)
+
+                print(color + '{3} {1}{0}{2}'.format(answers[i], ">" if selected == i else " ", "<" if selected == i else " ", ' ' * margin) + TextColors.ENDLINE)
 
         def up(selected, answers):
             if (selected == 0):

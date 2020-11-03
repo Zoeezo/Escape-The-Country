@@ -66,7 +66,7 @@ def inNederland1():
 
     userInput = console.ask(question='Hoe ga ik geld verdienen...', answers=['Baan zoeken', 'Criminaliteit'], color=TextColors.GREEN)
 
-    if(userInput == 'Baantje'):
+    if(userInput == 'baan zoeken'):
         console.write('Je vind een tijdelijk baantje en je verdient genoeg geld om de huur te betalen.')
         return
     elif(userInput == 'exit'):
@@ -112,36 +112,39 @@ def inNederland():
 
     deToekomst()
 
-def reisEvent5():
-    console.write('Je gaat door je enkel heen tijdens het lopen...')
+try:
+    def reisEvent5():
+        console.write('Je gaat door je enkel heen tijdens het lopen...')
 
-    answers = ['Doorlopen', 'Rustig aan doen', 'Verband gebuiken']
+        answers = ['Doorlopen', 'Rustig aan doen', 'Verband gebuiken']
 
-    if(not player.hasItem('Verband')):
-        answers.remove('Verband gebruiken')
+        if(not player.hasItem('Verband')):
+            answers.remove('Verband gebruiken')
 
-    userInput = console.ask(question='Kut me enkel doet zoveel pijn... Wat moet ik doen?', answers=answers, color=TextColors.GREEN)
+        userInput = console.ask(question='Kut me enkel doet zoveel pijn... Wat moet ik doen?', answers=answers, color=TextColors.GREEN)
 
-    if(userInput == 'Doorlopen'):
-        console.write('Je besluit door te lopen...')
+        if(userInput == 'Doorlopen'):
+            console.write('Je besluit door te lopen...')
 
-        if(randint(0, 1) == 1):
-            console.write('Na een tijdje lopen doet je enkel doet teveel zeer, je kan de reis niet meer afmaken...', color=TextColors.RED)
-            console.clearScreen(prompt=True)
+            if(randint(0, 1) == 1):
+                console.write('Na een tijdje lopen doet je enkel doet teveel zeer, je kan de reis niet meer afmaken...', color=TextColors.RED)
+                console.clearScreen(prompt=True)
+                titleScreen()
+            else:
+                console.write('Je enkel doet na een tijdje teveel zeer en je moet uitrusten...')
+                return 2
+        elif(userInput == 'exit'):
+            console.clearScreen(prompt=False)
             titleScreen()
+        elif(userInput == 'Rustig aan doen'):
+            console.write('Je besluit rustig aan te doen, je loopt maar 5 kilometer die dag...')
+            return 5
         else:
-            console.write('Je enkel doet na een tijdje teveel zeer en je moet uitrusten...')
-            return 2
-    elif(userInput == 'exit'):
-        console.clearScreen(prompt=False)
-        titleScreen()
-    elif(userInput == 'Rustig aan doen'):
-        console.write('Je besluit rustig aan te doen, je loopt maar 5 kilometer die dag...')
-        return 5
-    else:
-        console.write('Je doet verband om je enkel heen en je kan weer veilig doorlopen...')
-        player.removeItem('Verband')
-        return 15
+            console.write('Je doet verband om je enkel heen en je kan weer veilig doorlopen...')
+            player.removeItem('Verband')
+            return 15
+except Exception as e:
+    print(e)
 
 def reisEvent4():
     console.write('Je loopt door een rustig gebied heen,', emptyString=False)
@@ -230,7 +233,7 @@ def reisEvent2():
 def reisEvent1():
     console.write('Je komt een winkeltje tegen, je kijkt naar je geld en je ziet dat je nog ' + str(player.getMoney()) + ' euro bij je hebt...')
 
-    userInput = console.ask(question='Zal ik naar binnen gaan?', answers=['Ja', 'Nee'], color=TextColors.GREEN)
+    userInput = console.ask(question='Zal ik naar binnen gaan?', answers=['Ja', 'Nee'], color=TextColors.GREEN, addExit=False)
 
     if(userInput == 'Ja'):
         console.write('Je gaat naar binnen en je gaat naar de winkelier toe...')
@@ -267,6 +270,7 @@ def reisEvent1():
             else:
                 console.write('\'Laat maar...\'', color=TextColors.GREEN)
                 console.write('\'Oke, fijne dag!.\'', color=TextColors.BLUE)
+                break
 
 
         console.write('Je loopt na het winkelen nog 5 kilometer...')
@@ -346,7 +350,6 @@ def settings():
 
 def menuScreen():
     userInput = console.ask(question='//Menu//', answers=['Instellingen', 'Begin', 'Exit'], addExit=False)
-    console.clearScreen(prompt=False)
 
     if(userInput == 'Instellingen'):
         settings()
